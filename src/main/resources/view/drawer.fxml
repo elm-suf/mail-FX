@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0"
+      prefWidth="100.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <!--fx:controller="controller.DrawerController">-->
+    <children>
+        <JFXButton fx:id="newmail_btn" accessibleText="new_mail" prefHeight="25.0" prefWidth="136.0" text="new mail"/>
+        <JFXButton fx:id="inbox_btn" accessibleText="inbox" prefHeight="25.0" prefWidth="136.0" text="inbox"/>
+        <JFXButton accessibleText="draft" prefHeight="25.0" prefWidth="136.0" text="Draft"/>
+        <JFXButton accessibleText="sent" prefHeight="25.0" prefWidth="136.0" text="Sent"/>
+        <JFXButton accessibleText="spam" prefHeight="25.0" prefWidth="136.0" text="Spam"/>
+        <JFXButton accessibleText="settings" prefHeight="25.0" prefWidth="136.0" text="Settings"/>
+    </children>
+</VBox>
