@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXSpinner?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #F1EFF3;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.elmsuf.school.console.ConsoleView">
+
+    <children>
+        <VBox alignment="CENTER" layoutX="-36.0" layoutY="-86.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <JFXTextField focusColor="#323538" prefHeight="25.0" prefWidth="223.0" promptText="Search term" unFocusColor="#54595e">
+                    <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                    </padding>
+                </JFXTextField>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
+                    <children>
+                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="Warn" textFill="#f37821" toggleColor="#f37821" toggleLineColor="#ab5318" />
+                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="info" textFill="#b0bb51" toggleColor="#b0bb51" toggleLineColor="#959e48" wrapText="true">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </JFXToggleButton>
+                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="Error" textFill="#d63e3c" toggleColor="#d63e3c" toggleLineColor="#b93636">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </JFXToggleButton>
+                  <JFXButton blendMode="DARKEN" buttonType="RAISED" onAction="#clearLoggerList" ripplerFill="#681010" style="-fx-background-color: adaada;" text="CLEAR" />
+                    </children>
+                </HBox>
+                <JFXListView fx:id="listview" prefHeight="501.0" prefWidth="400.0" style="-fx-background-color: #54595E;" />
+            </children>
+        </VBox>
+        <JFXSpinner visible="false" AnchorPane.bottomAnchor="260.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="160.0" AnchorPane.topAnchor="260.0">
+            <effect>
+                <Glow />
+            </effect>
+        </JFXSpinner>
+    </children>
+    <padding>
+        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+    </padding>
+</AnchorPane>
