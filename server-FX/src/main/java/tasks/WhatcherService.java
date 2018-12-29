@@ -1,4 +1,4 @@
-package com.elmsuf.school.tasks;
+package tasks;
 
 import java.io.IOException;
 import java.nio.file.*;

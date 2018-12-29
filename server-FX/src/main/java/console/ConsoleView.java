@@ -1,8 +1,8 @@
-package com.elmsuf.school.console;
+package console;
 
-import com.elmsuf.school.MultiThreadedServer;
-import com.elmsuf.school.logger.Log;
-import com.elmsuf.school.logger.Logger;
+import server.MultiThreadedServer;
+import logger.Log;
+import logger.Logger;
 import com.jfoenix.controls.JFXListView;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;

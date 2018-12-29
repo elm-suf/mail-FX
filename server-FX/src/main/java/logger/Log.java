@@ -1,4 +1,4 @@
-package com.elmsuf.school.logger;
+package logger;
 
 public class Log {
     private String level;

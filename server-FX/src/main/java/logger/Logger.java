@@ -1,4 +1,4 @@
-package com.elmsuf.school.logger;
+package logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;

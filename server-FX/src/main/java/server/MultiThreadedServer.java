@@ -1,7 +1,7 @@
-package com.elmsuf.school;
+package server;
 
-import com.elmsuf.school.logger.Logger;
-import com.elmsuf.school.tasks.WorkerRunnable;
+import logger.Logger;
+import tasks.WorkerRunnable;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -43,7 +43,7 @@ public class MultiThreadedServer implements Runnable {
                 }
                 throw new RuntimeException("Error accepting client connection", e);
             }
-                logger.d("NEW CONNECTION", "Accepted new connection " + clientSocket.toString());
+            logger.d("NEW CONNECTION", "Accepted new connection " + clientSocket.toString());
             this.threadPool.execute(new WorkerRunnable
                     (clientSocket));
         }

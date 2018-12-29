@@ -1,4 +1,4 @@
-package com.elmsuf.school.console;
+package console;
 
 import de.saxsys.mvvmfx.ViewModel;
 import javafx.beans.property.ListProperty;

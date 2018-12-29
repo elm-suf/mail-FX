@@ -1,6 +1,6 @@
-package com.elmsuf.school.tasks;
+package tasks;
 
-import com.elmsuf.school.logger.Logger;
+import logger.Logger;
 import com.google.gson.Gson;
 import model.Mail;
 import model.Request;
@@ -28,9 +28,14 @@ public class GetAllServerTask implements Runnable {
         System.out.println(System.getProperty("user.dir"));
         List<File> list = listf("mailfxserver/persistence/" + username);
 
-        List<Mail> listOfUserMail = getListOfUserMail(list);
-
-        Request request = new Request("OK", listOfUserMail);
+        Request request = new Request();
+        List<Mail> listOfUserMail;
+        if (list == null || list.isEmpty()){
+            request.setAction("ERROR");
+        } else {
+            listOfUserMail = getListOfUserMail(list);
+            request = new Request("OK", listOfUserMail);
+        }
 
         try {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -43,8 +48,6 @@ public class GetAllServerTask implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static List<File> listf(String directoryName) {
@@ -75,8 +78,6 @@ public class GetAllServerTask implements Runnable {
                 Mail obj = gson.fromJson(br, Mail.class);
                 result.add(obj);
                 br.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

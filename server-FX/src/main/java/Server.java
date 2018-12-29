@@ -1,7 +1,5 @@
-package com.elmsuf.school;
-
-import com.elmsuf.school.console.ConsoleView;
-import com.elmsuf.school.console.ConsoleViewModel;
+import console.ConsoleView;
+import console.ConsoleViewModel;
 import de.saxsys.mvvmfx.FluentViewLoader;
 import de.saxsys.mvvmfx.ViewTuple;
 import javafx.application.Application;

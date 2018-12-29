@@ -1,6 +1,6 @@
-package com.elmsuf.school.tasks;
+package tasks;
 
-import com.elmsuf.school.logger.Logger;
+import logger.Logger;
 import model.Mail;
 import model.Request;
 
