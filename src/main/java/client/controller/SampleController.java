@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Mail;
-import model.MailBox;
+import client.viemodel.MailBox;
 
 import java.io.IOException;
 import java.net.URL;
