@@ -1,3 +1,5 @@
+package server;
+
 import console.ConsoleView;
 import console.ConsoleViewModel;
 import de.saxsys.mvvmfx.FluentViewLoader;
@@ -23,6 +25,6 @@ public class Server extends Application{
         Parent root = tuple.getView();
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
+        primaryStage.setOnCloseRequest(e -> ConsoleView.server.stop());
     }
 }

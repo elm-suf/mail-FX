@@ -23,4 +23,5 @@ dependencies {
     compile 'de.jensd:fontawesomefx-weathericons:2.0.10-5'
     compile 'de.jensd:fontawesomefx-controls:8.15'
     compile 'org.controlsfx:controlsfx:8.40.11'
+    compile 'com.google.code.gson:gson:2.2.+'
 }

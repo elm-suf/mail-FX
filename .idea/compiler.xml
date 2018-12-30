@@ -10,6 +10,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="mail-FX_main" target="1.8" />
+      <module name="mail-FX_test" target="1.8" />
       <module name="server-FX" target="1.8" />
     </bytecodeTargetLevel>
   </component>

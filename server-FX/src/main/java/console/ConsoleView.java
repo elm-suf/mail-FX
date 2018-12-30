@@ -22,17 +22,15 @@ public class ConsoleView implements FxmlView<ConsoleViewModel>, Initializable {
     @InjectViewModel
     private ConsoleViewModel viewModel;
     Logger logger;
+    public static MultiThreadedServer server;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        MultiThreadedServer server = new MultiThreadedServer(6789);
+        server = new MultiThreadedServer(6789);
         Thread thread = new Thread(server);
         logger = server.getLogger();
         listview.itemsProperty().bind(logger.listPropertyProperty());
         thread.start();
-
-//
-
     }
 
     public void clearLoggerList(ActionEvent actionEvent) {
