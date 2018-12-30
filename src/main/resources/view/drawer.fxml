@@ -1,17 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0"
-      prefWidth="100.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="330.0" minHeight="-Infinity" minWidth="230.0" prefHeight="600.0" prefWidth="270.0" spacing="8.0" style="-fx-background-color: #54595E;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <!--fx:controller="controller.DrawerController">-->
     <children>
-        <JFXButton fx:id="newmail_btn" accessibleText="new_mail" prefHeight="25.0" prefWidth="136.0" text="new mail"/>
-        <JFXButton fx:id="inbox_btn" accessibleText="inbox" prefHeight="25.0" prefWidth="136.0" text="inbox"/>
-        <JFXButton accessibleText="draft" prefHeight="25.0" prefWidth="136.0" text="Draft"/>
-        <JFXButton accessibleText="sent" prefHeight="25.0" prefWidth="136.0" text="Sent"/>
-        <JFXButton accessibleText="spam" prefHeight="25.0" prefWidth="136.0" text="Spam"/>
-        <JFXButton accessibleText="settings" prefHeight="25.0" prefWidth="136.0" text="Settings"/>
+      <JFXHamburger visible="false">
+         <VBox.margin>
+            <Insets top="16.0" />
+         </VBox.margin>
+      </JFXHamburger>
+        <JFXButton fx:id="newmail_btn" accessibleText="new_mail" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="NEW MAIL" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="46.0" />
+         </VBox.margin></JFXButton>
+        <JFXButton fx:id="inbox_btn" accessibleText="inbox" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="INBOX" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin></JFXButton>
+        <JFXButton accessibleText="draft" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="OUTBOX" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin></JFXButton>
+        <JFXButton accessibleText="sent" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="DRAFT" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin></JFXButton>
+        <JFXButton accessibleText="spam" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="DELETED" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin></JFXButton>
+        <JFXButton accessibleText="settings" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="SETTINGS" textFill="#f5f4f6">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin></JFXButton>
     </children>
+   <padding>
+      <Insets left="64.0" />
+   </padding>
 </VBox>

@@ -1,0 +1,41 @@
+.root{
+    -fx-background-color: #323538;
+}
+
+.dark {
+    -fx-background-color: #323538;
+    primary: #31D2B3;
+    low-contrast-neutral: #54595E;
+    highier-contrast-neutral: #F5F4F6;
+    reduced-contrast: #DDE3E5;
+
+}
+.failure{
+    -fx-background-color : #D63E3C;
+    -fx-text-fill: #F5F4F6;
+}
+
+.success{
+    -fx-background-color: #30D1B2;
+    -fx-text-fill: #F5F4F6;
+}
+
+.light{
+    background-color: #F1EFF3;
+    primary : #31D2B3;
+    low-contrast-neutral :#DDE3E5;
+    highier-contrast-neutral : #323538;
+    reduced-contrast: #54595E;
+}
+
+/*Dialog styling */
+.dialog-success{
+    -fx-background-color: #30D1B2;
+    -fx-border-color: #3c4ed1;
+    -fx-text-fill: #F5F4F6;
+}
+.dialog-error{
+    -fx-background-color : #D63E3C;
+    -fx-border-color: #d69b3a;
+    -fx-text-fill: #F5F4F6;
+}
