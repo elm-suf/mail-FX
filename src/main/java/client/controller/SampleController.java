@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.viemodel.MailBox;
 import com.jfoenix.controls.*;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -7,17 +8,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Mail;
-import client.viemodel.MailBox;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class SampleController implements Initializable {
@@ -54,8 +55,9 @@ public class SampleController implements Initializable {
     @FXML
     private JFXButton settings_btn;
 
-    protected static MailBox theMailBox;
-    public static String owner = "omar@gmail.com";
+    public static MailBox theMailBox;
+        public static String owner = "hind@gmail.com";
+//    public static String owner = "omar@gmail.com";
     public FilteredList<Mail> fList;
 
     @Override
@@ -68,38 +70,43 @@ public class SampleController implements Initializable {
             e.printStackTrace();
         }
         drawer.setVisible(false);
-        theMailBox = new MailBox(owner);
+        try {
+            theMailBox = new MailBox(owner);
+        } catch (IOException e) {
+            theMailBox = new MailBox();
+            promptNoConnection();
+            e.printStackTrace();
+        }
         fList = theMailBox.getViewableMails();
         inbox_listview.setItems(fList);
 
 
-        inbox_listview.setOnMouseClicked(event -> fill_all(inbox_listview.getSelectionModel().getSelectedItem()));
-
         show_inbox_btn.setOnMouseClicked(e -> theMailBox.filterReceived());
         show_outbox_btn.setOnMouseClicked(e -> theMailBox.filterSent());
-        inbox_listview.setCellFactory((param) -> {
-            ListCell<Mail> cell = new ListCell<Mail>() {
-                @Override
-                protected void updateItem(Mail item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null) {
-                        setGraphic(getCell(item));
-                    } else {
-                        setGraphic(null);
-                    }
-                }
-            };
-            return cell;
-        });
+        inbox_listview.setCellFactory(this::cellFactory);
+        inbox_listview.setOnMouseClicked(event -> fill_all(inbox_listview.getSelectionModel().getSelectedItem()));
 
+    }
+
+    private void promptNoConnection() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Server Error");
+        alert.setHeaderText("Server down");
+        alert.setContentText("Ooops, there was an error!");
+
+        alert.showAndWait();
     }
 
 
     private void fill_all(Mail selectedItem) {
-        if (selectedItem.isRead() == false){
+        if (!selectedItem.isRead()) {
             selectedItem.setRead(true);
-            //todo maybe later
+            inbox_listview.refresh();
+            if (!selectedItem.getSender().equals(owner)) {
+                theMailBox.setRead(selectedItem.id());
+            }
         }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/read-mail.fxml"));
 
@@ -140,9 +147,9 @@ public class SampleController implements Initializable {
         HBox mailfactory = null;
         String style;
         if (item.isRead()) {
-            style = "-fx-font-weight: bold";
-        } else {
             style = "-fx-font-weight: regular";
+        } else {
+            style = "-fx-font-weight: bold";
         }
 
         try {
@@ -163,7 +170,7 @@ public class SampleController implements Initializable {
                                 ch.setStyle(style);
                                 break;
                             case "date_txf":
-                                ((JFXTextField) ch).setText(new Date().toString());
+                                ((JFXTextField) ch).setText(item.getDate().toString());
                                 ch.setStyle(style);
                                 break;
                         }
@@ -174,5 +181,21 @@ public class SampleController implements Initializable {
             e.printStackTrace();
         }
         return mailfactory;
+    }
+
+    private ListCell<Mail> cellFactory(ListView<Mail> param) {
+        ListCell<Mail> cell = new ListCell<Mail>() {
+            @Override
+            protected void updateItem(Mail item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && !empty) {
+                    setGraphic(getCell(item));
+                } else {
+                    setText(null);
+                    setGraphic(null);
+                }
+            }
+        };
+        return cell;
     }
 }

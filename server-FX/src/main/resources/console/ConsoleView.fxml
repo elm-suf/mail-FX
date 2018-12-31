@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #F1EFF3;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="console.ConsoleView">
+<AnchorPane prefHeight="600.0" prefWidth="400.0" style="-fx-background-color: #F1EFF3;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="console.ConsoleView">
 
     <children>
         <VBox alignment="CENTER" layoutX="-36.0" layoutY="-86.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -24,18 +24,18 @@
                 </JFXTextField>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
                     <children>
-                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="Warn" textFill="#f37821" toggleColor="#f37821" toggleLineColor="#ab5318" />
-                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="info" textFill="#b0bb51" toggleColor="#b0bb51" toggleLineColor="#959e48" wrapText="true">
+                        <JFXToggleButton fx:id="toggle_info" prefHeight="50.0" prefWidth="103.0" text="info" textFill="#b0bb51" toggleColor="#b0bb51" toggleLineColor="#959e48" wrapText="true">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </JFXToggleButton>
-                        <JFXToggleButton prefHeight="50.0" prefWidth="103.0" text="Error" textFill="#d63e3c" toggleColor="#d63e3c" toggleLineColor="#b93636">
+                        <JFXToggleButton fx:id="toggle_debug" prefHeight="50.0" prefWidth="103.0" text="Debug" textFill="#f37821" toggleColor="#f37821" toggleLineColor="#ab5318" />
+                        <JFXToggleButton fx:id="toggle_error" prefHeight="50.0" prefWidth="103.0" text="Error" textFill="#d63e3c" toggleColor="#d63e3c" toggleLineColor="#b93636">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </JFXToggleButton>
-                  <JFXButton blendMode="DARKEN" buttonType="RAISED" onAction="#clearLoggerList" ripplerFill="#681010" style="-fx-background-color: adaada;" text="CLEAR" />
+                        <JFXButton blendMode="DARKEN" buttonType="RAISED" onAction="#clearLoggerList" ripplerFill="#681010" style="-fx-background-color: adaada;" text="CLEAR" />
                     </children>
                 </HBox>
                 <JFXListView fx:id="listview" prefHeight="501.0" prefWidth="400.0" style="-fx-background-color: #54595E;" />

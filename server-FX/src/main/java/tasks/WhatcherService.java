@@ -7,6 +7,13 @@ import java.util.Map;
 
 public class WhatcherService implements Runnable {
 
+    private String username;
+
+    public WhatcherService(String username) {
+
+        this.username = username;
+    }
+
     @Override
     public void run() {
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
@@ -30,15 +37,10 @@ public class WhatcherService implements Runnable {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path context = (Path) event.context();
                     System.out.printf("eventDir { %s : kind[%s] : context[%s] }%n", eventDir, kind, context);
-
                 }
             } while (watchKey.reset());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        new WhatcherService().run();
     }
 }

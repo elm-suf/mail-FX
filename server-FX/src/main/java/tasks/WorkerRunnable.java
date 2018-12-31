@@ -39,7 +39,8 @@ public class WorkerRunnable implements Runnable {
                     new SendMailServerTask(clientSocket, toSend).run();
                     break;
                 case "SET_READ":
-
+                    Logger.d("SET_READ", "setting update mail read status");
+                    new SetMailRead(clientSocket, request).run();
                     break;
                 case "DELETE":
                     Object req[] = (Object[]) request.getRequestObject();
@@ -49,7 +50,7 @@ public class WorkerRunnable implements Runnable {
                     new DeleteMailServerTask(clientSocket, mailAddress, delete).run();
                     break;
             }
-            input.close();
+//            input.close();
             System.out.println("Request processed: " + time);
         } catch (IOException | ClassNotFoundException e) {
             //report exception somewhere.

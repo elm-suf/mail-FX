@@ -4,11 +4,17 @@ import logger.Logger;
 import com.google.gson.Gson;
 import model.Mail;
 import model.Request;
+import server.MultiThreadedServer;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static server.MultiThreadedServer.mapUserSocket;
 
 public class GetAllServerTask implements Runnable {
     private final Socket clientSocket;
@@ -19,10 +25,21 @@ public class GetAllServerTask implements Runnable {
         this.clientSocket = clientSocket;
         this.username = username;
         TAG = clientSocket.toString();
+        this.init();
+    }
+
+    private void init() {
+        try {
+            clientSocket.setKeepAlive(true);
+            mapUserSocket.put(username, clientSocket);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
+//        new Thread(new WhatcherService(username)).start();
         Logger.d(TAG, "Getting all emails for " + username);
         System.out.println(File.listRoots().toString());
         System.out.println(System.getProperty("user.dir"));
@@ -30,7 +47,7 @@ public class GetAllServerTask implements Runnable {
 
         Request request = new Request();
         List<Mail> listOfUserMail;
-        if (list == null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             request.setAction("ERROR");
         } else {
             listOfUserMail = getListOfUserMail(list);
@@ -43,8 +60,7 @@ public class GetAllServerTask implements Runnable {
             out.writeObject(request);
             out.flush();
 
-            out.close();
-            clientSocket.close();
+//            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +83,7 @@ public class GetAllServerTask implements Runnable {
         return resultList;
     }
 
-    public static List<Mail> getListOfUserMail(List<File> list){
+    public static List<Mail> getListOfUserMail(List<File> list) {
         BufferedReader br;
         Gson gson = new Gson();
         List<Mail> result = new ArrayList<>();

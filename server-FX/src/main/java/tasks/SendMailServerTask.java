@@ -8,6 +8,8 @@ import model.Mail;
 import java.io.*;
 import java.net.Socket;
 
+import static server.MultiThreadedServer.mapUserSocket;
+
 public class SendMailServerTask implements Runnable {
     private final Socket clientSocket;
     private final Mail toSend;
@@ -31,14 +33,22 @@ public class SendMailServerTask implements Runnable {
     }
 
     private void addToReceived(Mail toSend, String receiver) {
-        toSend.setCategory("received");
+        toSend.setCategory("received");toSend.setRead(false);
         file = new File("mailfxserver/persistence/" + receiver + "/received/" + toSend.id() + ".json");
         file.getParentFile().mkdirs();
         addToPes(toSend);
+        notifyUser(receiver);
+    }
+
+    private void notifyUser(String receiver) {
+        if (mapUserSocket.containsKey(receiver)){
+            new NotifyUserNewMailReceivedTask(mapUserSocket.get(receiver), toSend).run();
+        }
     }
 
     private void addToSent(Mail toSend, String sender) {
         toSend.setCategory("sent");
+        toSend.setRead(true);
         file = new File("mailfxserver/persistence/" + sender + "/sent/" + toSend.id() + ".json");
         file.getParentFile().mkdirs();
         addToPes(toSend);

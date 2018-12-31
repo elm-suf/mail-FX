@@ -24,4 +24,6 @@ dependencies {
     compile 'de.jensd:fontawesomefx-controls:8.15'
     compile 'org.controlsfx:controlsfx:8.40.11'
     compile 'com.google.code.gson:gson:2.2.+'
+
+    compile 'commons-io:commons-io:2.7-SNAPSHOT'
 }

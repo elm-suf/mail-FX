@@ -6,16 +6,19 @@ import tasks.WorkerRunnable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MultiThreadedServer implements Runnable {
 
+    public static Map<String,Socket> mapUserSocket;
     protected int serverPort = 8080;
     protected ServerSocket serverSocket = null;
     protected boolean isStopped = false;
     protected Thread runningThread = null;
-    protected ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    protected ExecutorService threadPool = Executors.newCachedThreadPool();
     Logger logger = new Logger();
 
     public Logger getLogger() {
@@ -24,6 +27,7 @@ public class MultiThreadedServer implements Runnable {
 
     public MultiThreadedServer(int port) {
         this.serverPort = port;
+        mapUserSocket = new HashMap<>();
     }
 
     public void run() {

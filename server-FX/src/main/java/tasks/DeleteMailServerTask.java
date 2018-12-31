@@ -25,6 +25,11 @@ public class DeleteMailServerTask implements Runnable {
         File file = new File("mailfxserver/persistence/" + username);
         Logger.d("DeleteMailServerTask", String.format("Deleting mail w id[%d] from user {%s}", toDelete.id(), username));
         deleteFromDir(file);
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteFromDir(File file) {

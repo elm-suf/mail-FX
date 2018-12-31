@@ -1,13 +1,14 @@
 package client.viemodel;
 
-import client.tasks.DeleteMailTask;
-import client.tasks.GetAllCall;
-import client.tasks.SendMailTask;
+import client.tasks.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import model.Mail;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -15,38 +16,27 @@ public class MailBox {
     public static ObservableList<Mail> list = FXCollections.observableArrayList();
     private FilteredList<Mail> viewableMails = new FilteredList<>(list, e -> true);
     public String owner;
+    public Socket mySocket;
 
-    public MailBox(String owner) {
-        List<Mail> call = new GetAllCall(owner).call();
-        list.setAll(call);
+    public MailBox(){}
+
+    public MailBox(String owner) throws IOException {
         this.owner = owner;
+        this.init();
     }
 
-    public void add(String user, Mail mail) {
-//        file = new File("persistent/" + user + ".txt");
-////
-////        try {
-////            os = new FileOutputStream(file, true);
-////            bw = new BufferedWriter(new OutputStreamWriter(os));
-////
-////            gson = new GsonBuilder().create();
-////            String temp = gson.toJson(mail);
-////            bw.append(temp + "\n");
-////            bw.flush();
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////
-////        } finally {
-////            try {
-////                assert os != null;
-////                os.close();
-////                assert bw != null;
-////                bw.close();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////        }
+    private void init() throws IOException {
+            mySocket = new Socket("127.0.0.1", 6789);
+            mySocket.setKeepAlive(true);
+            new Thread(new ListenForUpdates(mySocket)).start();
 
+        List<Mail> call = new GetAllCall(mySocket, owner).call();
+        list.setAll(call);
+        list.sort(Comparator.comparing(Mail::getDate));
+    }
+
+    public void add(Mail mail) {
+        list.add( mail);
     }
 
     public ObservableList<Mail> getList() {
@@ -63,6 +53,7 @@ public class MailBox {
         System.out.println(mail);
         new SendMailTask(mail).run();
         mail.setCategory("sent");
+        mail.setRead(true);
         list.add(mail);
     }
 
@@ -82,6 +73,9 @@ public class MailBox {
         viewableMails.setPredicate(mail -> mail.getCategory().equals("sent"));
     }
 
+    public void setRead(int id) {
+        new SetEmailReadTask(owner, id).run();
+    }
 }
 
 

@@ -19,7 +19,8 @@ public class GetAllCall implements Callable<List<Mail>> {
     ObjectInputStream in;
     String owner;
 
-    public GetAllCall(String owner) {
+    public GetAllCall(Socket socket, String owner) {
+        this.socket = socket;
         this.owner = owner;
     }
 
@@ -28,7 +29,7 @@ public class GetAllCall implements Callable<List<Mail>> {
         List<Mail> allMail = new ArrayList<>();
         Request request = new Request("GET", owner);
         try {
-            socket = new Socket("127.0.0.1", 6789);
+            socket.setKeepAlive(true);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             out.writeObject(request);
             out.flush();

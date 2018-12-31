@@ -1,6 +1,5 @@
 package client.tasks;
 
-import model.Mail;
 import model.Request;
 
 import java.io.IOException;
@@ -9,17 +8,20 @@ import java.net.Socket;
 
 public class SetEmailReadTask implements Runnable {
 
+    private String owner;
     private final int  id;
 
-    public SetEmailReadTask(int id){
+    public SetEmailReadTask(String owner, int id){
+        this.owner = owner;
         this.id = id;
     }
 
 
     @Override
     public void run() {
+        Object[] params = {owner, id};
 
-        Request request = new Request("SET_READ", id);
+        Request request = new Request("SET_READ", params);
         System.out.println("********* setRead() " + id);
         try {
             Socket socket = new Socket("127.0.0.1", 6789);
