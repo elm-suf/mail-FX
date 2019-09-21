@@ -1,13 +1,12 @@
 package client.viemodel;
 
-import client.tasks.DeleteMailTask;
-import client.tasks.GetAllCall;
-import client.tasks.SendMailTask;
+import client.tasks.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import model.Mail;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -17,36 +16,13 @@ public class MailBox {
     public String owner;
 
     public MailBox(String owner) {
-        List<Mail> call = new GetAllCall(owner).call();
-        list.setAll(call);
         this.owner = owner;
     }
 
-    public void add(String user, Mail mail) {
-//        file = new File("persistent/" + user + ".txt");
-////
-////        try {
-////            os = new FileOutputStream(file, true);
-////            bw = new BufferedWriter(new OutputStreamWriter(os));
-////
-////            gson = new GsonBuilder().create();
-////            String temp = gson.toJson(mail);
-////            bw.append(temp + "\n");
-////            bw.flush();
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////
-////        } finally {
-////            try {
-////                assert os != null;
-////                os.close();
-////                assert bw != null;
-////                bw.close();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////        }
 
+    public void init() {
+        List<Mail> call = new GetAllCall(owner).call();
+        list.setAll(call);
     }
 
     public ObservableList<Mail> getList() {
@@ -59,11 +35,15 @@ public class MailBox {
     }
 
     public void send(Mail mail) {
-
-        System.out.println(mail);
+        System.out.println("Send: " + mail);
         new SendMailTask(mail).run();
         mail.setCategory("sent");
+        mail.setRead(true);
         list.add(mail);
+    }
+
+    public void setRead(Mail mail) {
+        new SetEmailReadTask(owner, mail).run();
     }
 
     public ObservableList<Mail> getReceived() {
@@ -82,6 +62,28 @@ public class MailBox {
         viewableMails.setPredicate(mail -> mail.getCategory().equals("sent"));
     }
 
+    public void unfilter() {
+        viewableMails.setPredicate(mail -> true);
+    }
+
+    public void update() {
+//        viewableMails.setPredicate(m -> m.isRead() == false);
+        if (list == null || list.isEmpty()) {
+            init();
+        } else {
+            list.sort(Comparator.comparing(Mail::getDate));
+            List<Mail> call = new UpdateCall(owner, list.get(0)).call();
+            System.out.println("CallList " + call);
+            if (call.size() > 0)
+                for (Mail el : call) {
+                    if (!el.isRead()) list.add(el);
+                }
+        }
+    }
+
+    public boolean isOnline() {
+        return new IsOnlineCall().call();
+    }
 }
 
 

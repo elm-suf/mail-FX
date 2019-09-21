@@ -122,13 +122,9 @@ public class ReadMailController implements Initializable {
             replyMail.setReceivers(Arrays.asList(mail.getSender()));
             replyMail.setSender(SampleController.owner);
 
-
-            replyMail.setSubject(String.format("RE: %s", mail.getSubject()));
-
-            replyMail.setMessage("\n\n\nRE - Sent from Mail-FX");
+            replyMail.setMessage(String.format("RE to: %s", mail.getSubject()));
 
             WriteMailController controller = new WriteMailController(replyMail);
-
             fxmlLoader.setController(controller);
             Node node = fxmlLoader.load();
             root_read_mail.getChildren().setAll(node);

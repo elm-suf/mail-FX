@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/mail-FX.iml" filepath="$PROJECT_DIR$/.idea/mail-FX.iml" group="mail-FX" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mail-FX_main.iml" filepath="$PROJECT_DIR$/.idea/modules/mail-FX_main.iml" group="mail-FX" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mail-FX_test.iml" filepath="$PROJECT_DIR$/.idea/modules/mail-FX_test.iml" group="mail-FX" />
+      <module fileurl="file://$PROJECT_DIR$/server-FX/serverfx.iml" filepath="$PROJECT_DIR$/server-FX/serverfx.iml" />
+    </modules>
+  </component>
+</project>

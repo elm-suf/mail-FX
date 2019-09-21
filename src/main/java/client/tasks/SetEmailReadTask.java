@@ -9,18 +9,22 @@ import java.net.Socket;
 
 public class SetEmailReadTask implements Runnable {
 
-    private final int  id;
+    private final Mail mail;
+    private final String  owner;
 
-    public SetEmailReadTask(int id){
-        this.id = id;
+    public SetEmailReadTask(String owner, Mail mail) {
+        this.owner = owner;
+        this.mail = mail;
     }
 
 
     @Override
     public void run() {
 
-        Request request = new Request("SET_READ", id);
-        System.out.println("********* setRead() " + id);
+        Object args[] = {owner,mail};
+
+        Request request = new Request("SET_READ", args);
+        System.out.println("********* setRead() " + mail);
         try {
             Socket socket = new Socket("127.0.0.1", 6789);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -30,4 +34,5 @@ public class SetEmailReadTask implements Runnable {
             e.printStackTrace();
         }
     }
+
 }

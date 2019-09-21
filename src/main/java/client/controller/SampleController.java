@@ -1,17 +1,19 @@
 package client.controller;
 
 import com.jfoenix.controls.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import model.Mail;
 import client.viemodel.MailBox;
 
@@ -23,6 +25,9 @@ import java.util.ResourceBundle;
 public class SampleController implements Initializable {
     @FXML
     private AnchorPane main_anchorpane;
+
+    @FXML
+    private AnchorPane connection;
 
     @FXML
     private AnchorPane left_anchorpane;
@@ -54,12 +59,73 @@ public class SampleController implements Initializable {
     @FXML
     private JFXButton settings_btn;
 
+    @FXML
+    private Label left_title_label;
+    @FXML
+    private Label mode_label;
+
     protected static MailBox theMailBox;
-    public static String owner = "omar@gmail.com";
+//    =====================================================================================================
+//    "omar@gmail.com", "me@me.com", "mario@lone.com"
+//   public static String owner = "me@me.com";
+//    public static String owner = "omar@gmail.com";
+    public static String owner = "mario@lone.com";
     public FilteredList<Mail> fList;
+    private SimpleStringProperty modeProperty;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initData();
+        initView();
+        initListeners();
+    }
+
+    private void initData() {
+        theMailBox = new MailBox(owner);
+        if (theMailBox.isOnline()){
+            fList = theMailBox.getViewableMails();
+            connection.setVisible(false);
+
+        } else {
+            System.out.println("Waiting for Connection");
+            connection.setVisible(true);
+
+        }
+    }
+
+    private void initListeners() {
+        inbox_listview.setOnMouseClicked(event -> fill_all(inbox_listview.getSelectionModel().getSelectedItem()));
+        show_inbox_btn.setOnMouseClicked(e -> showInbox());
+        show_outbox_btn.setOnMouseClicked(e -> showOutbox());
+
+        show_mailbox_btn.setOnMouseClicked(e -> showAll());
+    }
+
+    private void showAll() {
+        fList.forEach(System.out::println);
+        modeProperty.setValue("Unread Messages");
+        fList.setPredicate(elem -> !elem.isRead());
+
+        theMailBox.update();
+    }
+
+    private void showInbox() {
+//        theMailBox.filterReceived();
+        modeProperty.setValue("Inbox");
+        fList.setPredicate(elem -> !elem.getSender().equals(owner));
+    }
+
+    private void showOutbox() {
+//        theMailBox.filterSent();
+        modeProperty.setValue("Outbox");
+        fList.setPredicate(elem -> elem.getSender().equals(owner));
+    }
+
+    private void initView() {
+        left_title_label.setText(theMailBox.owner);
+        this.modeProperty = new SimpleStringProperty("Inbox");
+        mode_label.textProperty().bind(modeProperty);
+
         try {
             VBox sidePan = FXMLLoader.load(getClass().getResource("/view/drawer.fxml"));
             drawer.setSidePane(sidePan);
@@ -68,15 +134,10 @@ public class SampleController implements Initializable {
             e.printStackTrace();
         }
         drawer.setVisible(false);
-        theMailBox = new MailBox(owner);
-        fList = theMailBox.getViewableMails();
+
+
         inbox_listview.setItems(fList);
 
-
-        inbox_listview.setOnMouseClicked(event -> fill_all(inbox_listview.getSelectionModel().getSelectedItem()));
-
-        show_inbox_btn.setOnMouseClicked(e -> theMailBox.filterReceived());
-        show_outbox_btn.setOnMouseClicked(e -> theMailBox.filterSent());
         inbox_listview.setCellFactory((param) -> {
             ListCell<Mail> cell = new ListCell<Mail>() {
                 @Override
@@ -96,10 +157,14 @@ public class SampleController implements Initializable {
 
 
     private void fill_all(Mail selectedItem) {
-        if (selectedItem.isRead() == false){
+        System.out.println(selectedItem);
+        if (!selectedItem.isRead()) {
+            System.out.println("not read");
             selectedItem.setRead(true);
-            //todo maybe later
+            theMailBox.setRead(selectedItem);
+            inbox_listview.getSelectionModel().getSelectedItem().setRead(true);
         }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/read-mail.fxml"));
 
@@ -135,15 +200,16 @@ public class SampleController implements Initializable {
         }
     }
 
-
     private Node getCell(Mail item) {
         HBox mailfactory = null;
         String style;
-        if (item.isRead()) {
-            style = "-fx-font-weight: bold";
-        } else {
+        System.out.println(item);
+        if (!item.isRead()) {
             style = "-fx-font-weight: regular";
+        } else {
+            style = "-fx-font-weight: bold";
         }
+        boolean isOwner = item.getSender().equals(theMailBox.owner);
 
         try {
             mailfactory = FXMLLoader.load(getClass().getResource("/view/mail-factory.fxml"));
@@ -151,11 +217,15 @@ public class SampleController implements Initializable {
             for (Node n : mailfactory.getChildren()) {
                 if (n instanceof VBox) {
                     ObservableList<Node> children = ((VBox) n).getChildren();
-                    for (Node ch : children) {
 
+
+                    for (Node ch : children) {
                         switch (ch.getId()) {
                             case "sender_txf":
-                                ((JFXTextField) ch).setText(item.getSender());
+                                if (isOwner)
+                                    ((JFXTextField) ch).setText("To: " + item.getReceivers());
+                                else
+                                    ((JFXTextField) ch).setText("From: " + item.getSender());
                                 ch.setStyle(style);
                                 break;
                             case "subject_txf":
@@ -163,9 +233,14 @@ public class SampleController implements Initializable {
                                 ch.setStyle(style);
                                 break;
                             case "date_txf":
-                                ((JFXTextField) ch).setText(new Date().toString());
+                                ((JFXTextField) ch).setText(item.getDate().toString());
                                 ch.setStyle(style);
                                 break;
+                            case "root":
+                                System.out.println(isOwner);
+                                if (isOwner) {
+                                    ((HBox) ch).setBackground(new Background(new BackgroundFill(Color.rgb(10, 10, 20), CornerRadii.EMPTY, Insets.EMPTY)));
+                                }
                         }
                     }
                 }

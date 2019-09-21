@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="server-FX" />
+        <module name="serverfx" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="mail-FX_main" target="1.8" />
       <module name="mail-FX_test" target="1.8" />
       <module name="server-FX" target="1.8" />
+      <module name="serverfx" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

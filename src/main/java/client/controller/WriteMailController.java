@@ -12,7 +12,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import model.Mail;
 import model.Request;
+import org.controlsfx.control.Notifications;
 
+import javax.management.Notification;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,8 +54,8 @@ public class WriteMailController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("INITIALLA Write mail");
         sender_txf.setText(SampleController.owner);
+        send_to_chips.getSuggestions().addAll("omar@gmail.com", "me@me.com", "mario@lone.com");
 
         if (mail != null) {
             message_txa.setText(mail.getMessage());
@@ -77,9 +79,10 @@ public class WriteMailController implements Initializable {
         String message = message_txa.getText();
         String subject = subject_txf.getText();
         List<String> receivers = new ArrayList<>(send_to_chips.getChips());
-        Mail mail = new Mail(sender, receivers, subject, message, new Date());
+        Mail mail = new Mail(sender, receivers, subject, message, new Date(), false);
 
         theMailBox.send(mail);
+        Notifications.create().title("Send Email").text("Email sent correctly").showInformation();
     }
 
 }

@@ -19,7 +19,7 @@ public class Mail implements Serializable {
     public Mail() {
     }
 
-    public Mail(String sender, List<String> receivers, String subject, String message, Date date) {
+    public Mail(String sender, List<String> receivers, String subject, String message, Date date, Boolean isRead) {
         this();
         this.sender = sender;
         this.receivers = receivers;
@@ -27,10 +27,10 @@ public class Mail implements Serializable {
         this.message = message;
         this.date = date;
         this.id = hashCode();
-        isRead = false;
+        this.isRead = isRead;
     }
 
-    public Mail(String sender, List<String> receivers, String subject, String message, Date date, String category) {
+    public Mail(String sender, List<String> receivers, String subject, String message, Date date, String category, Boolean isRead) {
         this.sender = sender;
         this.receivers = receivers;
         this.subject = subject;
@@ -38,7 +38,7 @@ public class Mail implements Serializable {
         this.date = date;
         this.category = category;
         this.id = hashCode();
-        isRead = false;
+        this.isRead = isRead;
     }
 
     public String getSender() {
@@ -80,6 +80,7 @@ public class Mail implements Serializable {
                 ", receivers=" + receivers +
                 ", subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
+                ", isRead='" + isRead + '\'' +
                 '}';
     }
 
@@ -115,5 +116,6 @@ public class Mail implements Serializable {
     public void setRead(boolean read) {
         isRead = read;
     }
+
 
 }
