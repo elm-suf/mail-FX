@@ -32,7 +32,7 @@ public class UpdateCall implements Callable<List<Mail>> {
     public List<Mail> call() {
         List<Mail> newMail = new ArrayList<>();
 
-        Object args[] = {owner,mail};
+        Object args[] = {owner, mail};
         Request request = new Request("GET_NEW", args);
 
         try {
@@ -46,9 +46,9 @@ public class UpdateCall implements Callable<List<Mail>> {
             model.Request response = (model.Request) in.readObject();
 
             //if user doesn't have any mail response == ERROR
-            if (response.getAction().equals("OK")) {
-                newMail = (List<Mail>) response.getRequestObject();
-            }
+            System.out.println("Latest> " + mail.getSubject() + "\ndate >   " + mail.getDate().getTime());
+            System.out.println(response.getAction() + "¬" + response.getRequestObject());
+            newMail = (List<Mail>) response.getRequestObject();
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

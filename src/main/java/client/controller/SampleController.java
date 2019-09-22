@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class SampleController implements Initializable {
     @FXML
@@ -65,31 +69,52 @@ public class SampleController implements Initializable {
     private Label mode_label;
 
     protected static MailBox theMailBox;
-//    =====================================================================================================
+
+    //    =====================================================================================================
 //    "omar@gmail.com", "me@me.com", "mario@lone.com"
 //   public static String owner = "me@me.com";
-//    public static String owner = "omar@gmail.com";
-    public static String owner = "mario@lone.com";
+    public static String owner = "omar@gmail.com";
+    //    public static String owner = "mario@lone.com";
     public FilteredList<Mail> fList;
     private SimpleStringProperty modeProperty;
+    private boolean online = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initData();
+        System.out.println("data");
         initView();
+        System.out.println("view");
         initListeners();
+        System.out.println("listeners");
+        scheduleUpdates();
+        System.out.println("ups");
+    }
+
+
+    ScheduledFuture<?> scheduledUpdateFuture;
+
+    public void scheduleUpdates() {
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+        Runnable task1 = () -> {
+            System.out.println("task");
+            if (online) {
+                theMailBox.update();
+            }
+        };
+
+        scheduledUpdateFuture = ses.scheduleAtFixedRate(task1, 1, 5, TimeUnit.SECONDS);
     }
 
     private void initData() {
         theMailBox = new MailBox(owner);
-        if (theMailBox.isOnline()){
+        online = theMailBox.isOnline();
+        if (online) {
             fList = theMailBox.getViewableMails();
             connection.setVisible(false);
-
         } else {
             System.out.println("Waiting for Connection");
             connection.setVisible(true);
-
         }
     }
 
@@ -102,10 +127,8 @@ public class SampleController implements Initializable {
     }
 
     private void showAll() {
-        fList.forEach(System.out::println);
         modeProperty.setValue("Unread Messages");
         fList.setPredicate(elem -> !elem.isRead());
-
         theMailBox.update();
     }
 
@@ -131,8 +154,7 @@ public class SampleController implements Initializable {
             drawer.setSidePane(sidePan);
             hamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> darwerToggle());
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            System.out.println("SidePane error");        }
         drawer.setVisible(false);
 
 
@@ -157,7 +179,6 @@ public class SampleController implements Initializable {
 
 
     private void fill_all(Mail selectedItem) {
-        System.out.println(selectedItem);
         if (!selectedItem.isRead()) {
             System.out.println("not read");
             selectedItem.setRead(true);
@@ -176,7 +197,7 @@ public class SampleController implements Initializable {
 
             main_anchorpane.getChildren().setAll(load);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("ReadMail Pane ERROR");;
         }
     }
 
@@ -203,7 +224,6 @@ public class SampleController implements Initializable {
     private Node getCell(Mail item) {
         HBox mailfactory = null;
         String style;
-        System.out.println(item);
         if (!item.isRead()) {
             style = "-fx-font-weight: regular";
         } else {
@@ -213,7 +233,6 @@ public class SampleController implements Initializable {
 
         try {
             mailfactory = FXMLLoader.load(getClass().getResource("/view/mail-factory.fxml"));
-            System.out.println(mailfactory);
             for (Node n : mailfactory.getChildren()) {
                 if (n instanceof VBox) {
                     ObservableList<Node> children = ((VBox) n).getChildren();
@@ -237,7 +256,6 @@ public class SampleController implements Initializable {
                                 ch.setStyle(style);
                                 break;
                             case "root":
-                                System.out.println(isOwner);
                                 if (isOwner) {
                                     ((HBox) ch).setBackground(new Background(new BackgroundFill(Color.rgb(10, 10, 20), CornerRadii.EMPTY, Insets.EMPTY)));
                                 }

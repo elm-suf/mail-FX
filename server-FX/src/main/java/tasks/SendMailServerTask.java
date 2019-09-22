@@ -21,30 +21,33 @@ public class SendMailServerTask implements Runnable {
     @Override
     public void run() {
         Logger.d("SEND_TASK", Thread.currentThread().toString());
-        addToSent(toSend, toSend.getSender());
-        Logger.d("SEND_TASK", "mail sent");
+
 
         for (String receiver : toSend.getReceivers()) {
             addToReceived(toSend, receiver);
             Logger.d("SEND_TASK", "mail received");
         }
+
+        toSend.setRead(true);
+        addToSent(toSend, toSend.getSender());
+        Logger.d("SEND_TASK", "mail sent");
     }
 
     private void addToReceived(Mail toSend, String receiver) {
         toSend.setCategory("received");
         file = new File("mailfxserver/persistence/" + receiver + "/received/" + toSend.id() + ".json");
         file.getParentFile().mkdirs();
-        addToPes(toSend);
+        addToPersistence(toSend);
     }
 
     private void addToSent(Mail toSend, String sender) {
         toSend.setCategory("sent");
         file = new File("mailfxserver/persistence/" + sender + "/sent/" + toSend.id() + ".json");
         file.getParentFile().mkdirs();
-        addToPes(toSend);
+        addToPersistence(toSend);
     }
 
-    private void addToPes(Mail toSend) {
+    private void addToPersistence(Mail toSend) {
         FileOutputStream os;
         BufferedWriter bw;
         try {

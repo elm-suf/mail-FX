@@ -8,6 +8,11 @@ import model.Mail;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 public class MailBox {
@@ -23,6 +28,7 @@ public class MailBox {
     public void init() {
         List<Mail> call = new GetAllCall(owner).call();
         list.setAll(call);
+        list.sort(Comparator.comparing(Mail::getDate).reversed());
     }
 
     public ObservableList<Mail> getList() {
@@ -66,17 +72,24 @@ public class MailBox {
         viewableMails.setPredicate(mail -> true);
     }
 
+
     public void update() {
+        System.out.println("MBOX_Update");
 //        viewableMails.setPredicate(m -> m.isRead() == false);
+        System.out.println("MAIL_BOX update");
         if (list == null || list.isEmpty()) {
             init();
         } else {
-            list.sort(Comparator.comparing(Mail::getDate));
-            List<Mail> call = new UpdateCall(owner, list.get(0)).call();
+            Mail latest = list.stream()
+                    .filter(el -> el.getCategory().equals("received"))
+                    .max(Comparator.comparing(Mail::getDate))
+                    .orElseThrow(NoSuchElementException::new);
+            System.out.println("Latest" + latest.getSubject());
+            List<Mail> call = new UpdateCall(owner, latest).call();
             System.out.println("CallList " + call);
             if (call.size() > 0)
                 for (Mail el : call) {
-                    if (!el.isRead()) list.add(el);
+                    if (!el.isRead() && !list.contains(el)) list.add(el);
                 }
         }
     }
@@ -84,6 +97,8 @@ public class MailBox {
     public boolean isOnline() {
         return new IsOnlineCall().call();
     }
+
+
 }
 
 

@@ -8,34 +8,45 @@ import model.Request;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-public class GetAllServerTask implements Runnable {
+public class GetNewServerTask implements Runnable {
     private final Socket clientSocket;
     private final String username;
     String TAG;
+    private Mail last;
 
-    public GetAllServerTask(Socket clientSocket, String username) {
+    public GetNewServerTask(Socket clientSocket, String username, Mail last) {
         this.clientSocket = clientSocket;
         this.username = username;
         TAG = clientSocket.toString();
+        this.last = last;
     }
 
     @Override
     public void run() {
-        Logger.d(TAG, "Getting all emails for " + username);
-        System.out.println(File.listRoots().toString());
+        System.out.println(last);
+        System.out.println(last.getDate().compareTo(last.getDate()));
+        System.out.println(last.getDate().compareTo(new Date()));
+        Logger.d(TAG, "Getting new emails for " + username);
+        System.out.println(Arrays.toString(File.listRoots()));
         System.out.println(System.getProperty("user.dir"));
-        List<File> list = listf("mailfxserver/persistence/" + username);
+        List<File> list = listf("mailfxserver/persistence/" + username + "/received");
 
         Request request = new Request();
         List<Mail> listOfUserMail;
-        if (list == null || list.isEmpty()) {
+        listOfUserMail = getListOfUserMail(list);
+        if (listOfUserMail == null || listOfUserMail.isEmpty()) {
+            System.out.println("0 new Emails");
             request.setAction("ERROR");
         } else {
-            listOfUserMail = getListOfUserMail(list);
-            request = new Request("OK", listOfUserMail);
+            System.out.println("NEWWWW" + listOfUserMail.size());
+            request.setAction("OK");
         }
+
+        request.setRequestObject(listOfUserMail);
 
         try {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -50,7 +61,7 @@ public class GetAllServerTask implements Runnable {
         }
     }
 
-    public static List<File> listf(String directoryName) {
+    public List<File> listf(String directoryName) {
         File directory = new File(directoryName);
         List<File> resultList = new ArrayList<>();
         File[] fList = directory.listFiles();
@@ -67,22 +78,27 @@ public class GetAllServerTask implements Runnable {
         return resultList;
     }
 
-    public static List<Mail> getListOfUserMail(List<File> list) {
+    public List<Mail> getListOfUserMail(List<File> list) {
         BufferedReader br;
         Gson gson = new Gson();
-        List<Mail> result = new ArrayList<>();
+        List<Mail> newEmails = new ArrayList<>();
 
         for (File f : list) {
             try {
                 br = new BufferedReader(new FileReader(f));
-                Mail obj = gson.fromJson(br, Mail.class);
-                System.out.println("#####" + obj);
-                result.add(obj);
+                Mail item = gson.fromJson(br, Mail.class);
+                System.out.println("compare " + item.getDate() + " ->" + last.getDate());
+                System.out.println("compare " + item.getDate().compareTo(last.getDate()));
+                if (item.getDate().compareTo(last.getDate()) > 0) {
+                    newEmails.add(item);
+                    System.out.println("item" + item);
+                    System.out.println("newEmails" + newEmails);
+                }
                 br.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return result;
+        return newEmails;
     }
 }

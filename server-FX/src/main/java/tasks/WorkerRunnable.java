@@ -33,13 +33,25 @@ public class WorkerRunnable implements Runnable {
                     Logger.d("GET", "Get all messages for " + username);
                     new GetAllServerTask(clientSocket, username).run();
                     break;
+                case "GET_NEW":
+                    Object args[] = (Object[]) request.getRequestObject();
+                    String owner = (String) args[0];
+                    Mail last = (Mail) args[1];
+                    Logger.d("GET_NEW", "Get new messages for " + owner);
+                    new GetNewServerTask(clientSocket, owner, last).run();
+                    break;
                 case "SEND":
                     Logger.d("SEND", "send message");
                     Mail toSend = (Mail) request.getRequestObject();
                     new SendMailServerTask(clientSocket, toSend).run();
                     break;
                 case "SET_READ":
+                    Logger.d("SET_READ", "send message");
+                    Object param[] = (Object[]) request.getRequestObject();
 
+                    String user = (String) param[0];
+                    Mail toUpdate = (Mail) param[1];
+                    new SetReadTask(clientSocket, user, toUpdate).run();
                     break;
                 case "DELETE":
                     Object req[] = (Object[]) request.getRequestObject();
