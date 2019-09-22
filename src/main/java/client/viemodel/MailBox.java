@@ -89,7 +89,7 @@ public class MailBox {
             System.out.println("CallList " + call);
             if (call.size() > 0)
                 for (Mail el : call) {
-                    if (!el.isRead() && !list.contains(el)) list.add(el);
+                    if (!el.isRead() && !list.contains(el)) list.add(0, el);
                 }
         }
     }

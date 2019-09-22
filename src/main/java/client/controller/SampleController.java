@@ -19,6 +19,7 @@ import client.viemodel.MailBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -74,7 +75,7 @@ public class SampleController implements Initializable {
 //    "omar@gmail.com", "me@me.com", "mario@lone.com"
 //   public static String owner = "me@me.com";
     public static String owner = "omar@gmail.com";
-    //    public static String owner = "mario@lone.com";
+//    public static String owner = "mario@lone.com";
     public FilteredList<Mail> fList;
     private SimpleStringProperty modeProperty;
     private boolean online = false;
@@ -111,6 +112,7 @@ public class SampleController implements Initializable {
         online = theMailBox.isOnline();
         if (online) {
             fList = theMailBox.getViewableMails();
+            fList.sort(Comparator.comparing(Mail::getDate));
             connection.setVisible(false);
         } else {
             System.out.println("Waiting for Connection");
@@ -154,7 +156,8 @@ public class SampleController implements Initializable {
             drawer.setSidePane(sidePan);
             hamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> darwerToggle());
         } catch (IOException e) {
-            System.out.println("SidePane error");        }
+            System.out.println("SidePane error");
+        }
         drawer.setVisible(false);
 
 
@@ -197,7 +200,8 @@ public class SampleController implements Initializable {
 
             main_anchorpane.getChildren().setAll(load);
         } catch (IOException e) {
-            System.out.println("ReadMail Pane ERROR");;
+            System.out.println("ReadMail Pane ERROR");
+            ;
         }
     }
 
@@ -233,6 +237,13 @@ public class SampleController implements Initializable {
 
         try {
             mailfactory = FXMLLoader.load(getClass().getResource("/view/mail-factory.fxml"));
+            if (isOwner)
+                mailfactory.setStyle("-fx-background-color: #806567");
+            else if (item.isRead())
+                mailfactory.setStyle("-fx-background-color: #608080");
+            else
+                mailfactory.setStyle("-fx-background-color: #ff4b6f");
+
             for (Node n : mailfactory.getChildren()) {
                 if (n instanceof VBox) {
                     ObservableList<Node> children = ((VBox) n).getChildren();
@@ -256,9 +267,12 @@ public class SampleController implements Initializable {
                                 ch.setStyle(style);
                                 break;
                             case "root":
-                                if (isOwner) {
-                                    ((HBox) ch).setBackground(new Background(new BackgroundFill(Color.rgb(10, 10, 20), CornerRadii.EMPTY, Insets.EMPTY)));
-                                }
+//                                if (isOwner) {
+//                                    ((HBox) ch).setBackground(new Background(new BackgroundFill(Color.rgb(10, 10, 20), CornerRadii.EMPTY, Insets.EMPTY)));
+//                                }
+//                                if (item.isRead())
+//                                    ch.setStyle("-fx-background-color: gray");
+//                                else
                         }
                     }
                 }
