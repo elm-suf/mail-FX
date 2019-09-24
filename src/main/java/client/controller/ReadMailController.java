@@ -37,7 +37,8 @@ public class ReadMailController implements Initializable {
     private JFXTextArea message_txa;
 
     @FXML
-    private StackPane root_read_mail;
+    private AnchorPane root_read_mail;
+
 
     Mail mail;
 
@@ -71,15 +72,21 @@ public class ReadMailController implements Initializable {
         dialogLayout.setHeading(new Text("Are you sure you want to delete this message?"));
         dialogLayout.setActions(button_nope, button_yep);
 
-        JFXDialog dialog = new JFXDialog(root_read_mail, dialogLayout, JFXDialog.DialogTransition.CENTER);
+        StackPane stackPane = new StackPane();
+
+        JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.CENTER);
 
         button_yep.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             theMailBox.delete(mail);
             clearFields();
             dialog.close();
+            root_read_mail.getChildren().remove(stackPane);
         });
         button_nope.setOnMouseClicked(e -> dialog.close());
+        root_read_mail.getChildren().add(stackPane);
 
+        stackPane.prefWidthProperty().bind(root_read_mail.widthProperty());
+        stackPane.prefHeightProperty().bind(root_read_mail.heightProperty());
         dialog.show();
     }
 

@@ -7,6 +7,7 @@ import model.Request;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Date;
 
 public class WorkerRunnable implements Runnable {
     private static final String TAGW = "Worker";
@@ -36,7 +37,7 @@ public class WorkerRunnable implements Runnable {
                 case "GET_NEW":
                     Object args[] = (Object[]) request.getRequestObject();
                     String owner = (String) args[0];
-                    Mail last = (Mail) args[1];
+                    Date last = (Date) args[1];
                     Logger.d("GET_NEW", "Get new messages for " + owner);
                     new GetNewServerTask(clientSocket, owner, last).run();
                     break;

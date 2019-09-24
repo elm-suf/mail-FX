@@ -112,22 +112,19 @@
                         </ImageView>
                     </graphic>
                 </JFXButton>
+              <JFXButton fx:id="new_mail_btn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#loadSendMail" prefHeight="59.0" ripplerFill="#685757" textAlignment="CENTER">
+                  <font>
+                      <Font name="System Bold" size="1.0" />
+                  </font>
+                  <graphic>
+                      <ImageView accessibleRole="BUTTON" depthTest="ENABLE" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../icons/newMail.png" />
+                          </image>
+                      </ImageView>
+                  </graphic>
+              </JFXButton>
             </children>
         </VBox>
-        <JFXButton fx:id="new_mail_btn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" ellipsisString="" graphicTextGap="0.0" onMouseClicked="#loadSendMail" prefHeight="59.0" ripplerFill="#685757" textAlignment="CENTER" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="5">
-            <font>
-                <Font name="System Bold" size="1.0" />
-            </font>
-            <graphic>
-                <ImageView accessibleRole="BUTTON" depthTest="ENABLE" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../icons/newMail.png" />
-                    </image>
-                </ImageView>
-            </graphic>
-            <GridPane.margin>
-                <Insets left="48.0" top="56.0" />
-            </GridPane.margin>
-        </JFXButton>
     </children>
 </GridPane>

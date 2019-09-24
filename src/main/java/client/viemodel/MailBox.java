@@ -7,12 +7,8 @@ import javafx.collections.transformation.FilteredList;
 import model.Mail;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 
 public class MailBox {
@@ -49,6 +45,9 @@ public class MailBox {
     }
 
     public void setRead(Mail mail) {
+        int i = list.indexOf(mail);
+        mail.setRead(true);
+        list.set(i, mail);
         new SetEmailReadTask(owner, mail).run();
     }
 
@@ -72,33 +71,33 @@ public class MailBox {
         viewableMails.setPredicate(mail -> true);
     }
 
-
-    public void update() {
-        System.out.println("MBOX_Update");
+    /**
+     * @return count of new Emails
+     */
+    public int update() {
 //        viewableMails.setPredicate(m -> m.isRead() == false);
-        System.out.println("MAIL_BOX update");
         if (list == null || list.isEmpty()) {
             init();
         } else {
-            Mail latest = list.stream()
+            Date latest = list.stream()
                     .filter(el -> el.getCategory().equals("received"))
-                    .max(Comparator.comparing(Mail::getDate))
-                    .orElseThrow(NoSuchElementException::new);
-            System.out.println("Latest" + latest.getSubject());
+                    .map(Mail::getDate)
+                    .max(Date::compareTo)
+                    .orElse(new Date(0));
+            System.out.println("UPDATE - Latest Date: " + latest);
             List<Mail> call = new UpdateCall(owner, latest).call();
             System.out.println("CallList " + call);
             if (call.size() > 0)
-                for (Mail el : call) {
-                    if (!el.isRead() && !list.contains(el)) list.add(0, el);
-                }
+                list.addAll(call);
+
+            return call.size();
         }
+        return -1;
     }
 
     public boolean isOnline() {
         return new IsOnlineCall().call();
     }
-
-
 }
 
 

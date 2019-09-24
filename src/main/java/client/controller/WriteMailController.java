@@ -9,12 +9,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import model.Mail;
 import model.Request;
 import org.controlsfx.control.Notifications;
 
-import javax.management.Notification;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +82,7 @@ public class WriteMailController implements Initializable {
         Mail mail = new Mail(sender, receivers, subject, message, new Date(), false);
 
         theMailBox.send(mail);
-        Notifications.create().title("Send Email").text("Email sent correctly").showInformation();
+        Notifications.create().title("Send Email").text("Email sent correctly").hideAfter(new Duration(500)).showInformation();
     }
 
 }

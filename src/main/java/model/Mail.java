@@ -41,6 +41,7 @@ public class Mail implements Serializable {
         this.isRead = isRead;
     }
 
+
     public String getSender() {
         return sender;
     }

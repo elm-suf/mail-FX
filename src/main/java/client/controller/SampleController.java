@@ -1,6 +1,7 @@
 package client.controller;
 
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import model.Mail;
 import client.viemodel.MailBox;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 import java.net.URL;
@@ -69,13 +71,12 @@ public class SampleController implements Initializable {
     @FXML
     private Label mode_label;
 
+    //    =====================================================================================================
+    public static String owner = "user1@mail.com";
+//    public static String owner = "user2@mail.com";
+//    public static String owner = "user3@mail.com";
     protected static MailBox theMailBox;
 
-    //    =====================================================================================================
-//    "omar@gmail.com", "me@me.com", "mario@lone.com"
-//   public static String owner = "me@me.com";
-    public static String owner = "omar@gmail.com";
-//    public static String owner = "mario@lone.com";
     public FilteredList<Mail> fList;
     private SimpleStringProperty modeProperty;
     private boolean online = false;
@@ -98,12 +99,15 @@ public class SampleController implements Initializable {
     public void scheduleUpdates() {
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
         Runnable task1 = () -> {
-            System.out.println("task");
-            if (online) {
-                theMailBox.update();
-            }
+            Platform.runLater(() -> {
+                if (online) {
+                    int count = theMailBox.update();
+                    System.out.printf("Got new {[%d]} messages\n", count);
+                    if (count > 0)
+                        Notifications.create().title("New Email").text(String.format("Got %d new Emails\n", count)).showInformation();
+                }
+            });
         };
-
         scheduledUpdateFuture = ses.scheduleAtFixedRate(task1, 1, 5, TimeUnit.SECONDS);
     }
 
@@ -131,7 +135,6 @@ public class SampleController implements Initializable {
     private void showAll() {
         modeProperty.setValue("Unread Messages");
         fList.setPredicate(elem -> !elem.isRead());
-        theMailBox.update();
     }
 
     private void showInbox() {
@@ -184,10 +187,9 @@ public class SampleController implements Initializable {
     private void fill_all(Mail selectedItem) {
         if (!selectedItem.isRead()) {
             System.out.println("not read");
-            selectedItem.setRead(true);
             theMailBox.setRead(selectedItem);
-            inbox_listview.getSelectionModel().getSelectedItem().setRead(true);
         }
+        inbox_listview.refresh();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/read-mail.fxml"));
@@ -211,7 +213,7 @@ public class SampleController implements Initializable {
             drawer.setVisible(false);
         } else {
             drawer.setVisible(true);
-        } //todo look at this again please future wiser me
+        }
     }
 
     public void loadSendMail(MouseEvent mouseEvent) {

@@ -8,15 +8,15 @@
 <VBox alignment="TOP_CENTER" maxWidth="360.0" minWidth="240.0" prefHeight="600.0" prefWidth="270.0" style="-fx-background-color: #DDE3E5;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <!--fx:controller="controller.DrawerController">-->
     <children>
-        <JFXButton fx:id="newmail_btn" accessibleText="new_mail" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="NEW MAIL" textFill="#54595e">
-            <font>
-                <Font name="BebasNeueBold" size="24.0" />
-            </font>
-            <VBox.margin>
-                <Insets />
-            </VBox.margin>
-        </JFXButton>
-        <JFXButton accessibleText="sent" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="UNREAD" textFill="#54595e">
+      <JFXButton fx:id="newmail_btn1" accessibleText="new_mail" alignment="CENTER" buttonType="RAISED" prefHeight="44.0" prefWidth="266.0" style="-fx-background-color: #54595e;" text="MAIL-FX" textFill="#31d2b3">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="-40.0" />
+         </VBox.margin>
+      </JFXButton>
+        <JFXButton fx:id="newmail_btn" accessibleText="new_mail" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="NEW EMAILS" textFill="#54595e">
             <font>
                 <Font name="BebasNeueBold" size="24.0" />
             </font>
@@ -37,9 +37,17 @@
                 <Font name="BebasNeueBold" size="24.0" />
             </font>
             <VBox.margin>
-                <Insets top="14.0" />
+                <Insets top="16.0" />
             </VBox.margin>
         </JFXButton>
+      <JFXButton accessibleText="sent" alignment="BOTTOM_LEFT" buttonType="RAISED" prefHeight="44.0" prefWidth="300.0" text="WRITE" textFill="#54595e">
+         <font>
+            <Font name="BebasNeueBold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="14.0" />
+         </VBox.margin>
+      </JFXButton>
     </children>
     <padding>
         <Insets left="40.0" />

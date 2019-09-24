@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.Socket;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
@@ -21,18 +22,18 @@ public class UpdateCall implements Callable<List<Mail>> {
     ObjectInputStream in;
 
     private String owner;
-    private Mail mail;
+    private Date lastReceived;
 
-    public UpdateCall(String owner, Mail lastReceived) {
+    public UpdateCall(String owner, Date lastReceived) {
         this.owner = owner;
-        mail = lastReceived;
+        this.lastReceived = lastReceived;
     }
 
     @Override
     public List<Mail> call() {
         List<Mail> newMail = new ArrayList<>();
 
-        Object args[] = {owner, mail};
+        Object args[] = {owner, lastReceived};
         Request request = new Request("GET_NEW", args);
 
         try {
@@ -46,8 +47,6 @@ public class UpdateCall implements Callable<List<Mail>> {
             model.Request response = (model.Request) in.readObject();
 
             //if user doesn't have any mail response == ERROR
-            System.out.println("Latest> " + mail.getSubject() + "\ndate >   " + mail.getDate().getTime());
-            System.out.println(response.getAction() + "¬" + response.getRequestObject());
             newMail = (List<Mail>) response.getRequestObject();
 
         } catch (IOException | ClassNotFoundException e) {

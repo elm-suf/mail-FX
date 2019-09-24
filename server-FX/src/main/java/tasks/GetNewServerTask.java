@@ -16,9 +16,9 @@ public class GetNewServerTask implements Runnable {
     private final Socket clientSocket;
     private final String username;
     String TAG;
-    private Mail last;
+    private Date last;
 
-    public GetNewServerTask(Socket clientSocket, String username, Mail last) {
+    public GetNewServerTask(Socket clientSocket, String username, Date last) {
         this.clientSocket = clientSocket;
         this.username = username;
         TAG = clientSocket.toString();
@@ -27,9 +27,6 @@ public class GetNewServerTask implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(last);
-        System.out.println(last.getDate().compareTo(last.getDate()));
-        System.out.println(last.getDate().compareTo(new Date()));
         Logger.d(TAG, "Getting new emails for " + username);
         System.out.println(Arrays.toString(File.listRoots()));
         System.out.println(System.getProperty("user.dir"));
@@ -66,7 +63,7 @@ public class GetNewServerTask implements Runnable {
         List<File> resultList = new ArrayList<>();
         File[] fList = directory.listFiles();
         if (fList == null)
-            return null;
+            return resultList;
         for (File file : fList) {
             if (file.isFile()) {
                 resultList.add(file);
@@ -74,7 +71,6 @@ public class GetNewServerTask implements Runnable {
                 resultList.addAll(listf(file.getAbsolutePath()));
             }
         }
-
         return resultList;
     }
 
@@ -87,9 +83,7 @@ public class GetNewServerTask implements Runnable {
             try {
                 br = new BufferedReader(new FileReader(f));
                 Mail item = gson.fromJson(br, Mail.class);
-                System.out.println("compare " + item.getDate() + " ->" + last.getDate());
-                System.out.println("compare " + item.getDate().compareTo(last.getDate()));
-                if (item.getDate().compareTo(last.getDate()) > 0) {
+                if (item.getDate().compareTo(last) > 0) {
                     newEmails.add(item);
                     System.out.println("item" + item);
                     System.out.println("newEmails" + newEmails);
@@ -97,6 +91,7 @@ public class GetNewServerTask implements Runnable {
                 br.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return newEmails;
             }
         }
         return newEmails;
